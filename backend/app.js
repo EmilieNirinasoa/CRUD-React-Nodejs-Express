@@ -37,5 +37,18 @@ app.get('/items', (req, res) => {
     }
   });
 });
+// Route pour l'insertion (Create)
+app.post('/items', (req, res) => {
+  const { name } = req.body;
+  db.query('INSERT INTO items (nom) VALUES (?)', [name], (err, result) => {
+    if (err) {
+      console.error('Database query error:', err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      res.json({ id: result.insertId, name });
+    }
+  });
+});
 
 // Autres routes pour Create, Update, Delete...
+
