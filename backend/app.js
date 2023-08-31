@@ -37,6 +37,8 @@ app.get('/items', (req, res) => {
     }
   });
 });
+
+
 // Route pour l'insertion (Create)
 app.post('/items', (req, res) => {
   const { name } = req.body;
@@ -49,6 +51,90 @@ app.post('/items', (req, res) => {
     }
   });
 });
+
+
+
+
+
+
+
+
+app.get('/items/:id', (req, res) => {
+  const itemId = req.params.id;
+
+  db.query('SELECT * FROM items WHERE id = ?', [itemId], (err, results) => {
+    if (err) {
+      console.error('Database query error:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+
+    if (results.length === 0) {
+      res.status(404).json({ message: 'Item not found' });
+    } else {
+      res.json(results[0]); // Renvoie la première ligne trouvée
+    }
+  });
+});
+
+app.put('/items/:id', (req, res) => {
+  const itemId = req.params.id;
+  const { name } = req.body;
+  
+  db.query('UPDATE items SET nom = ? WHERE id = ?', [name, itemId], (err, result) => {
+    if (err) {
+      console.error('Database query error:', err);
+      res.status(500).send('Internal Server Error');
+    } else if (result.affectedRows === 0) {
+      res.status(404).send('Item not found');
+    } else {
+      res.json({ id: itemId, name });
+    }
+  });
+});
+
+app.put('/items2/:id', (req, res) => {
+  const itemId = req.params.id;
+  const { name } = req.body;
+  
+  db.query('DELETE items  WHERE id = ?', [ itemId], (err, result) => {
+    if (err) {
+      console.error('Database query error:', err);
+      res.status(500).send('Internal Server Error');
+    } else if (result.affectedRows === 0) {
+      res.status(404).send('Item not found');
+    } else {
+      res.json({ id: itemId, name });
+    }
+  });
+});
+
+app.delete('/api/data/:id', (req, res) => {
+  const idToDelete = req.params.id;
+
+  const deleteQuery = 'DELETE FROM items WHERE id = ?';
+
+  db.query(deleteQuery, [idToDelete], (err, result) => {
+    if (err) {
+      console.error('Error deleting item from database:', err);
+      res.status(500).json({ message: 'Erreur lors de la suppression de l\'élément de la base de données' });
+    } else {
+      if (result.affectedRows > 0) {
+        res.status(200).json({ message: 'Élément supprimé avec succès' });
+      } else {
+        res.status(404).json({ message: 'Élément non trouvé' });
+      }
+    }
+  });
+});
+
+ 
+
+
+
+
+
+
 
 // Autres routes pour Create, Update, Delete...
 
