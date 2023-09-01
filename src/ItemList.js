@@ -33,7 +33,7 @@ function ItemList() {
         <a href='/Liste'>Liste</a>
       </nav>
       <button><a href='/create'>Ajouter</a></button>
-      <table>
+      <table class="table is-bordered">
         <tr>
           <th>ID</th>
           <th>Nom</th>
@@ -46,7 +46,7 @@ function ItemList() {
      <td>{item.id}</td>
       <td>{item.nom}</td>
       <td>
-        <button><Link to={`/ItemEditForm/${item.id}`}>Modifier</Link></button>
+        <button class="btn btn-primary"><Link to={`/ItemEditForm/${item.id}`}>Modifier</Link></button>
         <ItemDeleteButton itemId={item.id} />
       </td>
     </tr>

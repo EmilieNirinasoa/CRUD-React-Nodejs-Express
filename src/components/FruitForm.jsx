@@ -33,7 +33,7 @@ export default function FruitForm({handleAdd}) {
         <div>
             <form action="submit" onSubmit={handleSubmit}>
                 <input value={NouveauFruit} onChange={handlechange} type="text" placeholder="Ajouter un fruits...."/>
-               <button>Ajouter</button>
+               <button class="button is-link">Ajouter</button>
             </form>
         </div>
     );

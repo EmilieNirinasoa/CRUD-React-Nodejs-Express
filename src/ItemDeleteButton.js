@@ -27,7 +27,7 @@ function ItemDeleteButton({ itemId }) {
   };
 
   return (
-    <button onClick={handleDelete}>Supprimer</button>
+    <button onClick={handleDelete} class="button is-danger">Supprimer</button>
   );
 }
 

@@ -38,11 +38,17 @@ function ItemForm() {
       
       <h2>Ajouter un élément</h2>
       <form onSubmit={handleSubmit}>
-        <input
+      <div class="field">
+  <label class="label">Name</label>
+  <div class="control">
+  <input
           type="text"
           value={itemName}
           onChange={(e) => setItemName(e.target.value)}
         />
+  </div>
+</div>
+       
         <button type="submit"><a >Ajouter</a></button>
       </form>
     </div>
