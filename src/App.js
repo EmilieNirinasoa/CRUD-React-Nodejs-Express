@@ -7,6 +7,8 @@ const ItemForm = lazy(() => import('./ItemForm'));
 const ItemEditForm = lazy(() => import('./ItemEditForm'));
 const ItemDeleteButton = lazy(() => import('./ItemDeleteButton'));
 const IDList = lazy(() => import('./IDlist'));
+const Compteur = lazy(() => import('./Compteur'));
+const Liste = lazy(() => import('./Liste'));
 const App = () => (
   <Router>
     <Suspense fallback={<div>Chargement...</div>}>
@@ -14,6 +16,8 @@ const App = () => (
         <Route path="/" element={<ItemList />} />
         <Route path="/about" element={<About />} />
         <Route path="/create" element={<ItemForm/>} />
+        <Route path="/Compteur" element={<Compteur/>} />
+        <Route path="/Liste" element={<Liste/>} />
         <Route path="/id/:id" element={<IDList/>} />
         <Route path="/ItemEditForm/:itemId" element={<ItemEditForm/>} />
         <Route path="/delete/:itemId" element={<ItemDeleteButton/>} />

@@ -28,6 +28,10 @@ function ItemList() {
   return (
     <div>
       <h2>Item List</h2>
+      <nav>
+        <a href='/Compteur'>Compteur</a>
+        <a href='/Liste'>Liste</a>
+      </nav>
       <button><a href='/create'>Ajouter</a></button>
       <table>
         <tr>
@@ -47,7 +51,7 @@ function ItemList() {
       </td>
     </tr>
          
-        ))}
+        ))};
         
            
         </tbody>
