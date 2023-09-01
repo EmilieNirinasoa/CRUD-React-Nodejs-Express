@@ -27,12 +27,19 @@ function ItemList() {
 
   return (
     <div>
-      <h2>Item List</h2>
-      <nav>
-        <a href='/Compteur'>Compteur</a>
-        <a href='/Liste'>Liste</a>
-      </nav>
-      <button><a href='/create'>Ajouter</a></button>
+      <header class="has-background-black">
+      <h2 class="has-text-left has-text-danger title is-4 mb-1">Item List</h2>
+      
+      <div class="tabs is-right">
+  <ul>
+    <li class="is-active"><a href='/Compteur' class="has-text-white">Compteur</a></li>
+    <li><a href='/Liste' class="has-text-white">Liste</a></li>
+    
+  </ul>
+</div>
+      </header>
+      
+      <a href='/create' class="button is-warning">Ajouter</a>
       <table class="table is-bordered">
         <tr>
           <th>ID</th>
@@ -46,7 +53,7 @@ function ItemList() {
      <td>{item.id}</td>
       <td>{item.nom}</td>
       <td>
-        <button class="btn btn-primary"><Link to={`/ItemEditForm/${item.id}`}>Modifier</Link></button>
+        <button class="button is-info "><Link to={`/ItemEditForm/${item.id}`} class="has-text-white">Modifier</Link></button>
         <ItemDeleteButton itemId={item.id} />
       </td>
     </tr>
