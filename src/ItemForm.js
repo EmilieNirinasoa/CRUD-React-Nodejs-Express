@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2'; // Importation de SweetAlert
-import { Routes } from 'react-router-dom';
+
 
 function ItemForm() {
   const [itemName, setItemName] = useState('');
 
+ 
+  const [selectedFile, setSelectedFile] = useState(null);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -37,7 +40,7 @@ function ItemForm() {
     <div>
       
       <h2>Ajouter un élément</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}  >
       <div class="field">
   <label class="label">Name</label>
   <div class="control">
@@ -48,7 +51,8 @@ function ItemForm() {
         />
   </div>
 </div>
-       
+
+  
         <button type="submit"><a >Ajouter</a></button>
       </form>
     </div>

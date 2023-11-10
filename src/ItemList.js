@@ -5,6 +5,8 @@ import ItemDeleteButton from './ItemDeleteButton';
 
 import ItemEditForm from './ItemEditForm';
 import ItemForm from './ItemForm';
+import Header from './components/Header';
+import Card from './components/Card';
 
 function ItemList() {
   const [items, setItems] = useState([]);
@@ -27,18 +29,11 @@ function ItemList() {
 
   return (
     <div>
-      <header class="has-background-black">
-      <h2 class="has-text-left has-text-danger title is-4 mb-1">Item List</h2>
-      
-      <div class="tabs is-right">
-  <ul>
-    <li class="is-active"><a href='/Compteur' class="has-text-white">Compteur</a></li>
-    <li><a href='/Liste' class="has-text-white">Liste</a></li>
-    
-  </ul>
-</div>
-      </header>
-      
+      <Header/>
+     
+      <body class="has-background-light">
+        
+        <Card/>
       <a href='/create' class="button is-warning">Ajouter</a>
       <table class="table is-bordered">
         <tr>
@@ -63,7 +58,7 @@ function ItemList() {
            
         </tbody>
       </table>
-     
+      </body>
     </div>
   );
 }
