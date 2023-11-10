@@ -1,12 +1,18 @@
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
+const multer = require('multer');
+const bodyParser = require('body-parser');
 
+const upload = multer({ dest: 'uploads/' });
 const app = express();
 const port = 3001;
-
+const fs=require('fs').promises
+// app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/uploads',express.static("uploads"))
 
 const db = mysql.createConnection({
   host: 'localhost',
@@ -27,7 +33,7 @@ db.connect(err => {
 });
 
 // Exemple de route pour la lecture (Read)
-app.get('/items', (req, res) => {
+app.get('/items', upload.single('file'),(req, res) => {
   db.query('SELECT * FROM items', (err, results) => {
     if (err) {
       console.error('Database query error:', err);
@@ -51,6 +57,12 @@ app.post('/items', (req, res) => {
     }
   });
 });
+
+
+
+  
+
+
 
 
 
@@ -128,10 +140,69 @@ app.delete('/api/data/:id', (req, res) => {
   });
 });
 
+ // Spécifiez le dossier de destination pour le téléchargement des fichiers
+ // Remplacez cela par le module que vous utilisez pour la base de données
+
+app.post("/upload", upload.single('asset'), async (req, res) => {
+  try {
+    console.log("request file", req.file);
+    console.log("request body", req.body);
+    const fullName = req.body.fullname;
+    const fullNameS = req.body.fullnames;
+    console.log(fullName,fullNameS);
+
+    const renameFileFromTypeMime = async (file) => {
+      let ext = null;
+
+      switch (file.mimetype) {
+        case 'image/jpeg':
+          ext = '.jpg';
+          break;
+        case 'image/png':
+          ext = '.png';
+          break;
+        case 'application/pdf': // Correction : utiliser 'application/pdf' pour le type MIME des fichiers PDF
+          ext = '.pdf';
+          break;
+        default:
+          ext = "";
+          break;
+      }
+
+      const newFilename = `uploads/${req.file.filename}${ext}`;
+      await fs.rename(req.file.path, newFilename);
+
+      const name = req.file.filename;
+
+      // Utilisation d'une promesse pour gérer l'opération de base de données de manière asynchrone
+      return new Promise((resolve, reject) => {
+        db.query('INSERT INTO image(nom, path) VALUES (?,?)', [fullName, newFilename], (err, result) => {
+          if (err) {
+            console.error('Database query error:', err);
+            reject(err);
+          } else {
+            resolve(newFilename);
+          }
+        });
+      });
+    }
+
+    const asset = await renameFileFromTypeMime(req.file);
+
+    res.json({
+      fullName: req.body.fullname,
+      asset
+    });
+  } catch (error) {
+    console.error('Error during file upload:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+
  
-
-
-
+     
 
 
 
