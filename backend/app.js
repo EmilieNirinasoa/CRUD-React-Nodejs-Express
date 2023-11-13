@@ -3,6 +3,8 @@ const mysql = require('mysql2');
 const cors = require('cors');
 const multer = require('multer');
 const bodyParser = require('body-parser');
+const nodemailer = require('nodemailer');
+
 
 const upload = multer({ dest: 'uploads/' });
 const app = express();
@@ -33,7 +35,7 @@ db.connect(err => {
 });
 
 // Exemple de route pour la lecture (Read)
-app.get('/items', upload.single('file'),(req, res) => {
+app.get('/items',(req, res) => {
   db.query('SELECT * FROM items', (err, results) => {
     if (err) {
       console.error('Database query error:', err);
@@ -139,9 +141,77 @@ app.delete('/api/data/:id', (req, res) => {
     }
   });
 });
-
+//installation de nodemailer
  // Spécifiez le dossier de destination pour le téléchargement des fichiers
  // Remplacez cela par le module que vous utilisez pour la base de données
+
+// app.post("/upload", upload.single('asset'), async (req, res) => {
+//   try {
+//     console.log("request file", req.file);
+//     console.log("request body", req.body);
+//     const fullName = req.body.fullname;
+//     const fullNameS = req.body.fullnames;
+//     console.log(fullName,fullNameS);
+
+//     const renameFileFromTypeMime = async (file) => {
+//       let ext = null;
+
+//       switch (file.mimetype) {
+//         case 'image/jpeg':
+//           ext = '.jpg';
+//           break;
+//         case 'image/png':
+//           ext = '.png';
+//           break;
+//         case 'application/pdf': // Correction : utiliser 'application/pdf' pour le type MIME des fichiers PDF
+//           ext = '.pdf';
+//           break;
+//         default:
+//           ext = "";
+//           break;
+//       }
+
+//       const newFilename = `uploads/${req.file.filename}${ext}`;
+//       await fs.rename(req.file.path, newFilename);
+
+//       const name = req.file.filename;
+//       console.log(newFilename);
+//       // Utilisation d'une promesse pour gérer l'opération de base de données de manière asynchrone
+//       return new Promise((resolve, reject) => {
+//         db.query('INSERT INTO image(nom, path) VALUES (?,?)', [fullName, newFilename], (err, result) => {
+//           if (err) {
+//             console.error('Database query error:', err);
+//             reject(err);
+//           } else {
+//             resolve(newFilename);
+//           }
+//         });
+//       });
+
+     
+  
+//       transporter.sendMail(mailOptions, (error, info) => {
+//         if (error) {
+//           console.error('Error sending email:', error);
+//         } else {
+//           console.log('Email sent: ' + info.response);
+//         }
+//       });
+//     }
+
+//     const asset = await renameFileFromTypeMime(req.file);
+
+//     res.json({
+//       fullName: req.body.fullname,
+//       asset
+//     });
+//   } catch (error) {
+//     console.error('Error during file upload:', error);
+//     res.status(500).send('Internal Server Error');
+//   }
+// });
+
+
 
 app.post("/upload", upload.single('asset'), async (req, res) => {
   try {
@@ -149,7 +219,7 @@ app.post("/upload", upload.single('asset'), async (req, res) => {
     console.log("request body", req.body);
     const fullName = req.body.fullname;
     const fullNameS = req.body.fullnames;
-    console.log(fullName,fullNameS);
+    console.log(fullName, fullNameS);
 
     const renameFileFromTypeMime = async (file) => {
       let ext = null;
@@ -168,11 +238,8 @@ app.post("/upload", upload.single('asset'), async (req, res) => {
           ext = "";
           break;
       }
-
       const newFilename = `uploads/${req.file.filename}${ext}`;
       await fs.rename(req.file.path, newFilename);
-
-      const name = req.file.filename;
 
       // Utilisation d'une promesse pour gérer l'opération de base de données de manière asynchrone
       return new Promise((resolve, reject) => {
@@ -181,6 +248,29 @@ app.post("/upload", upload.single('asset'), async (req, res) => {
             console.error('Database query error:', err);
             reject(err);
           } else {
+            const transporter = nodemailer.createTransport({
+             service:"gmail",
+              auth: {
+                user: 'emilienirinasoa@gmail.com',
+                pass: 'ixfo gwdv zqtq hzca',
+              },
+            });
+      
+            const mailOptions = {
+              from: 'emilienirinasoa@gmail.com',
+              to: 'fanomezanaemilienirinasoa@gmail.com',
+              subject: 'New File Uploaded',
+              text: `A new file has been uploaded.`,
+            };
+      
+            transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                console.error('Error sending email:', error);
+              } else {
+                console.log('Email sent: ' + info.response);
+              }
+            });
+            // Lorsque la base de données est mise à jour avec succès, résolvez la promesse
             resolve(newFilename);
           }
         });
@@ -188,6 +278,10 @@ app.post("/upload", upload.single('asset'), async (req, res) => {
     }
 
     const asset = await renameFileFromTypeMime(req.file);
+
+    // Envoyer l'email une fois que la promesse est résolue
+   //npm install google-auth-library
+
 
     res.json({
       fullName: req.body.fullname,
